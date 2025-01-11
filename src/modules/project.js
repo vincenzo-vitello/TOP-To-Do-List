@@ -1,5 +1,5 @@
 import { createTodoElement } from "./todo.js";
-import isValidDate from "../global_functions/dateValidator.js";
+import { isValidDate } from "../global_functions/dateValidator.js";
 
 class Project {
   constructor(id, title, description, dueDate, priority, tasks = []) {

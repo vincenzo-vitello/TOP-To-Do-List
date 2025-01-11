@@ -1,4 +1,4 @@
-import isValidDate from "../global_functions/dateValidator.js";
+import { isValidDate } from "../global_functions/dateValidator.js";
 
 class TodoElement {
   constructor(id, title, description, dueDate, priority) {

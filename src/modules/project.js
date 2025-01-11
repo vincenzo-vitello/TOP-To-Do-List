@@ -40,8 +40,18 @@ class Project {
     this.priority = newPriority;
   }
 }
+let projectCounter = 1;
 
-function createProject(id, title, description, dueDate, priority, tasks = []) {
-  return new Project(id, title, description, dueDate, priority, tasks);
+function createProject(title, description, dueDate, priority, tasks = []) {
+  const project = new Project(
+    projectCounter,
+    title,
+    description,
+    dueDate,
+    priority,
+    tasks
+  );
+  projectCounter++;
+  return project;
 }
 export { createProject };

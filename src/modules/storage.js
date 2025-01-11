@@ -59,7 +59,6 @@ function deleteProject(projectId) {
 // // initializeData();
 // console.log(localStorage.getItem("todoAppData"));
 export {
-  saveData,
   loadData,
   initializeData,
   clearData,

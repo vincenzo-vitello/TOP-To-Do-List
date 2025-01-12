@@ -1,8 +1,10 @@
-// import { createProject } from "./project";
+import { createProject } from "./project";
+import { generateUniqueId } from "../global_functions/generateUniqueId";
+
 const STORAGE_KEY = "todoAppData";
 
 const initialData = {
-  projects: [{}],
+  projects: [],
 };
 
 function saveData(data) {
@@ -10,14 +12,9 @@ function saveData(data) {
 }
 function loadData() {
   const storedData = localStorage.getItem(STORAGE_KEY);
-  return storedData ? JSON.parse(storedData) : null;
+  //   console.log("Loaded data:", storedData);
+  return storedData ? JSON.parse(storedData) : { projects: [] };
 }
-// saveData([
-//   { title: "test", description: "test" },
-//   { title: "test2", description: "test2" },
-// ]);
-// loadData();
-// console.log(localStorage.getItem("todoAppData"));
 function initializeData() {
   const data = loadData();
   if (!data) {
@@ -27,9 +24,17 @@ function initializeData() {
 function clearData() {
   localStorage.removeItem(STORAGE_KEY);
 }
-function addProject() {
+function addProject(title, description, dueDate, priority, tasks = []) {
   const data = loadData();
-  data.projects.push(project);
+  const newProject = createProject(
+    generateUniqueId(),
+    title,
+    description,
+    dueDate,
+    priority,
+    tasks
+  );
+  data.projects.push(newProject);
   saveData(data);
 }
 function updateProject(updatedProject) {
@@ -45,19 +50,8 @@ function updateProject(updatedProject) {
 function deleteProject(projectId) {
   const data = loadData();
   data.projects = data.projects.filter((project) => project.id !== projectId);
-  saveData();
+  saveData(data);
 }
-// const projectTest = createProject(
-//   1,
-//   "test",
-//   "test description",
-//   "due date test",
-//   "high priority",
-//   ["check functionality", "test"]
-// );
-// saveData(projectTest);
-// // initializeData();
-// console.log(localStorage.getItem("todoAppData"));
 export {
   loadData,
   initializeData,

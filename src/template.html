@@ -6,6 +6,28 @@
     <title>T.O.P. Do List</title>
   </head>
   <body>
+    <div id="new-project-form">
+      <h2>Create New Project</h2>
+      <form id="project-form">
+        <label for="title">Title</label>
+        <input type="text" id="title-input" name="title" required />
+
+        <label for="description">Description</label>
+        <input type="text" id="description-input" name="description" required />
+
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate-input" name="dueDate" required />
+
+        <label for="priority">Priority</label>
+        <select id="priority-input" name="priority" required>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+
+        <button type="submit">Create Project</button>
+      </form>
+    </div>
     <div id="projects_container"></div>
   </body>
 </html>

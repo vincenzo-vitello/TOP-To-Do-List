@@ -11,9 +11,10 @@ function handleProjectCreation(event) {
 
   addProject(title, description, dueDate, priority);
 
-  renderProjects(loadData().projects);
+  renderProjects();
   document.getElementById("project-form").reset();
 }
+
 function setupNewProjectForm() {
   const form = document.getElementById("project-form");
   form.addEventListener("submit", handleProjectCreation);
@@ -41,31 +42,31 @@ function createProjectCard(project) {
       `;
 
   const deleteBtn = projectCard.querySelector(".delete_project_btn");
-  deleteBtn.addEventListener("click", () => removeProject(project.id));
-  renderProjects();
-
+  deleteBtn.addEventListener("click", () => {
+    removeProject(project.id);
+    renderProjects();
+  });
   return projectCard;
 }
 
-function renderProjects(projects) {
+function renderProjects() {
   const container = document.getElementById("projects_container");
+  const { projects } = loadData();
+  //   console.log(projects);
+  //   console.log(projects.length);
+  container.innerHTML = "";
 
   const emptyContainer = document.createElement("p");
-  emptyContainer.classList.add("empty_container_msg");
-  emptyContainer.textContent = "no projects available.";
+  emptyContainer.className = "empty-container-message";
+  emptyContainer.textContent = "no projects created";
 
-  if (!projects || projects.length === 0) {
-    container.innerHTML = "";
-    container.appendChild(emptyContainer);
-  } else {
-    projects.forEach((project) => {
-      const projectCard = createProjectCard(project);
-      container.innerHTML = "";
-      container.appendChild(projectCard);
+  if (projects.length !== 0) {
+    projects.forEach((element) => {
+      container.appendChild(createProjectCard(element));
     });
+  } else {
+    container.appendChild(emptyContainer);
   }
-
-  console.log(projects);
 }
 
 export { renderProjects, setupNewProjectForm };

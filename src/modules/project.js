@@ -1,9 +1,11 @@
 import { createTodoElement } from "./todo.js";
 import { isValidDate } from "../global_functions/dateValidator.js";
-import { generateUniqueId } from "../global_functions/generateUniqueId";
 
 class Project {
   constructor(id, title, description, dueDate, priority, tasks = []) {
+    if (!isValidDate(dueDate)) {
+      throw new Error("Invalid due date provided.");
+    }
     this.id = id;
     this.title = title;
     this.description = description;
@@ -11,18 +13,8 @@ class Project {
     this.priority = priority;
     this.tasks = tasks;
   }
-  addTask(taskTitle, taskDescription, taskDueDate, taskPriority) {
-    if (!isValidDate(dueDate)) {
-      console.error("invalid date");
-      return false;
-    }
-    const task = createTodoElement(
-      generateUniqueId(),
-      taskTitle,
-      taskDescription,
-      taskDueDate,
-      taskPriority
-    );
+  addTask(taskTitle) {
+    const task = createTodoElement(taskTitle);
     if (task) {
       this.tasks.push(task);
       return true;
@@ -43,6 +35,10 @@ class Project {
     this.description = newDescription;
   }
   updateDueDate(newDueDate) {
+    if (!isValidDate(newDueDate)) {
+      console.warn("Cannot update: Invalid due date provided.");
+      return;
+    }
     this.dueDate = newDueDate;
   }
   updatePriority(newPriority) {

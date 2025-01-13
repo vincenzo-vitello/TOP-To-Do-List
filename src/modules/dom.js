@@ -5,6 +5,7 @@ import {
   addTaskToProject,
   removeTaskFromProject,
 } from "./storage";
+import { isValidDate } from "../global_functions/dateValidator";
 
 function handleProjectCreation(event) {
   event.preventDefault();
@@ -14,6 +15,10 @@ function handleProjectCreation(event) {
   const dueDate = document.getElementById("dueDate-input").value;
   const priority = document.getElementById("priority-input").value;
 
+  if (!isValidDate(dueDate)) {
+    alert("Please enter a valid future due date.");
+    return;
+  }
   addProject(title, description, dueDate, priority);
 
   renderProjects();
@@ -177,6 +182,7 @@ function renderProjects() {
   } else {
     container.appendChild(emptyContainer);
   }
+  console.log(projects);
 }
 
 export { renderProjects, setupNewProjectForm };

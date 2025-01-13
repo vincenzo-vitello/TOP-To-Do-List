@@ -52,6 +52,28 @@ function deleteProject(projectId) {
   data.projects = data.projects.filter((project) => project.id !== projectId);
   saveData(data);
 }
+function addTaskToProject(projectId, taskTitle) {
+  const data = loadData(); // Carica i dati dal localStorage
+  const project = data.projects.find((project) => project.id === projectId); // Trova il progetto
+
+  if (project) {
+    project.tasks.push({ title: taskTitle }); // Aggiungi il task al progetto
+    updateProject(project); // Salva il progetto aggiornato
+  } else {
+    console.error(`Project with ID ${projectId} not found`);
+  }
+}
+function removeTaskFromProject(projectId, taskTitle) {
+  const data = loadData();
+  const project = data.projects.find((project) => project.id === projectId);
+
+  if (project) {
+    project.tasks = project.tasks.filter((task) => task.title !== taskTitle);
+    updateProject(project);
+  } else {
+    console.error(`Project with ID ${projectId} not found`);
+  }
+}
 export {
   loadData,
   initializeData,
@@ -59,4 +81,6 @@ export {
   addProject,
   updateProject,
   deleteProject,
+  addTaskToProject,
+  removeTaskFromProject,
 };

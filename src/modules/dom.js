@@ -6,6 +6,7 @@ import {
   removeTaskFromProject,
 } from "./storage";
 import { isValidDate } from "../global_functions/dateValidator";
+import { isDueThisWeek, isDueToday } from "../global_functions/dateFilters";
 
 function handleProjectCreation(event) {
   event.preventDefault();
@@ -110,7 +111,6 @@ function createProjectCardHTML(project) {
         <button class="add-task">Add Task</button>
         <ul class="task_list"></ul>
         <button class="complete_btn">Mark As Complete</button>
-        <button class="expand_btn">Expand</button>
         <button class="delete_project_btn">Delete Project</button>
     `;
 
@@ -164,25 +164,41 @@ function createProjectCard(project) {
   return projectCard;
 }
 
-function renderProjects() {
+function renderProjects(filterFunction = null) {
   const container = document.getElementById("projects_container");
   const { projects } = loadData();
-  //   console.log(projects);
-  //   console.log(projects.length);
   container.innerHTML = "";
 
-  const emptyContainer = document.createElement("p");
-  emptyContainer.className = "empty-container-message";
-  emptyContainer.textContent = "no projects created";
+  const filteredProjects = filterFunction
+    ? projects.filter(filterFunction)
+    : projects;
 
-  if (projects.length !== 0) {
-    projects.forEach((element) => {
-      container.appendChild(createProjectCard(element));
+  if (filteredProjects.length > 0) {
+    filteredProjects.forEach((project) => {
+      container.appendChild(createProjectCard(project));
     });
   } else {
+    const emptyContainer = document.createElement("p");
+    emptyContainer.className = "empty-container-message";
+    emptyContainer.textContent = "No projects to display.";
     container.appendChild(emptyContainer);
   }
-  console.log(projects);
+}
+function filterProjects() {
+  const filters = document.getElementById("filters");
+  const todayFilter = filters.querySelector("#today");
+  const thisWeekFilter = filters.querySelector("#this-week");
+  const allProjectsFilter = filters.querySelector("#all-projects");
+
+  todayFilter.addEventListener("click", () => {
+    renderProjects(isDueToday);
+  });
+  allProjectsFilter.addEventListener("click", () => {
+    renderProjects();
+  });
+  thisWeekFilter.addEventListener("click", () => {
+    renderProjects(isDueThisWeek);
+  });
 }
 
-export { renderProjects, setupNewProjectForm };
+export { renderProjects, setupNewProjectForm, filterProjects };

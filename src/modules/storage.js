@@ -53,12 +53,12 @@ function deleteProject(projectId) {
   saveData(data);
 }
 function addTaskToProject(projectId, taskTitle) {
-  const data = loadData(); // Carica i dati dal localStorage
-  const project = data.projects.find((project) => project.id === projectId); // Trova il progetto
+  const data = loadData();
+  const project = data.projects.find((project) => project.id === projectId);
 
   if (project) {
-    project.tasks.push({ title: taskTitle }); // Aggiungi il task al progetto
-    updateProject(project); // Salva il progetto aggiornato
+    project.tasks.push({ title: taskTitle });
+    updateProject(project);
   } else {
     console.error(`Project with ID ${projectId} not found`);
   }

@@ -47,14 +47,7 @@ class Project {
 }
 
 function createProject(id, title, description, dueDate, priority, tasks = []) {
-  const project = {
-    id,
-    title,
-    description,
-    dueDate,
-    priority,
-    tasks,
-  };
+  const project = new Project(id, title, description, dueDate, priority, tasks);
   return project;
 }
 export { createProject };

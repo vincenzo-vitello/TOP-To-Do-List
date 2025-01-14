@@ -1,4 +1,4 @@
-import { removeProject } from "./controller";
+import { removeProject, isDueThisWeek, isDueToday } from "./controller";
 import {
   addProject,
   loadData,
@@ -6,7 +6,6 @@ import {
   removeTaskFromProject,
 } from "./storage";
 import { isValidDate } from "../global_functions/dateValidator";
-import { isDueThisWeek, isDueToday } from "../global_functions/dateFilters";
 
 function handleProjectCreation(event) {
   event.preventDefault();

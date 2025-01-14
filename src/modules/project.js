@@ -12,6 +12,7 @@ class Project {
     this.dueDate = dueDate;
     this.priority = priority;
     this.tasks = tasks;
+    this.isDone = false;
   }
   addTask(taskTitle) {
     const task = createTodoElement(taskTitle);
@@ -43,6 +44,9 @@ class Project {
   }
   updatePriority(newPriority) {
     this.priority = newPriority;
+  }
+  markAsDone() {
+    this.isDone = true;
   }
 }
 

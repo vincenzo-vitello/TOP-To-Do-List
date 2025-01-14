@@ -1,4 +1,4 @@
-import { deleteProject } from "./storage";
+import { deleteProject, loadData, saveData } from "./storage";
 
 export function removeProject(id) {
   deleteProject(id);
@@ -33,4 +33,15 @@ export function isDueToday(project) {
 
   const projectFormatted = `${projectYear}/${projectMonth}/${projectDay}`;
   return projectFormatted === todayFormatted;
+}
+export function updateProjectStatus(projectId, status) {
+  const data = loadData();
+  const project = data.projects.find((p) => p.id === projectId);
+
+  if (project) {
+    project.isDone = status;
+    saveData(data);
+  } else {
+    console.warn("Project not found!");
+  }
 }

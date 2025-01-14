@@ -75,6 +75,7 @@ function removeTaskFromProject(projectId, taskTitle) {
   }
 }
 export {
+  saveData,
   loadData,
   initializeData,
   clearData,

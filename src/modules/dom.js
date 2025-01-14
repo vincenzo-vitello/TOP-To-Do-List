@@ -1,4 +1,9 @@
-import { removeProject, isDueThisWeek, isDueToday } from "./controller";
+import {
+  removeProject,
+  isDueThisWeek,
+  isDueToday,
+  updateProjectStatus,
+} from "./controller";
 import {
   addProject,
   loadData,
@@ -99,7 +104,9 @@ function setupNewProjectForm() {
 function createProjectCardHTML(project) {
   const projectCard = document.createElement("div");
   projectCard.classList.add("project_card");
-
+  if (project.isDone) {
+    projectCard.classList.add("complete");
+  }
   projectCard.innerHTML = `
         <h3 class="title">${project.title}</h3>
         <p class="description">${project.description}</p>
@@ -155,6 +162,10 @@ function addProjectCardListeners(projectCard, project) {
     removeProject(project.id);
     renderProjects();
   });
+  const markAsCompleteBtn = projectCard.querySelector(".complete_btn");
+  markAsCompleteBtn.addEventListener("click", () => {
+    markProjectAsComplete(project.id);
+  });
 }
 function createProjectCard(project) {
   const projectCard = createProjectCardHTML(project);
@@ -182,6 +193,7 @@ function renderProjects(filterFunction = null) {
     emptyContainer.textContent = "No projects to display.";
     container.appendChild(emptyContainer);
   }
+  console.log(projects);
 }
 function filterProjects() {
   const filters = document.getElementById("filters");
@@ -199,5 +211,8 @@ function filterProjects() {
     renderProjects(isDueThisWeek);
   });
 }
-
+function markProjectAsComplete(projectId) {
+  updateProjectStatus(projectId, true);
+  renderProjects();
+}
 export { renderProjects, setupNewProjectForm, filterProjects };

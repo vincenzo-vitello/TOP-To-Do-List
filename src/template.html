@@ -4,37 +4,62 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>T.O.P. Do List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    <div id="filters">
-      <ul>
-        <li id="today">Today</li>
-        <li id="this-week">This week</li>
-        <li id="all-projects">All Projects</li>
-      </ul>
-    </div>
-    <div id="new-project-form">
-      <h2>Create New Project</h2>
-      <form id="project-form">
-        <label for="title">Title</label>
-        <input type="text" id="title-input" name="title" required />
+    <div id="overlay"></div>
+    <header>
+      <div id="logo">Effictio.</div>
+      <div id="theme-switcher">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </div>
+    </header>
+    <main>
+      <nav id="filters">
+        <p for="filters"><span>Filters</span></p>
+        <ul>
+          <li id="today">Today</li>
+          <li id="this-week">This week</li>
+          <li id="all-projects">All Projects</li>
+        </ul>
+        <button id="add-project">add project</button>
+      </nav>
+      <div class="projects-section">
+        <div id="projects_container"></div>
+        <div id="new-project-form">
+          <h2>Create New Project</h2>
+          <form id="project-form">
+            <label for="title">Title</label>
+            <input type="text" id="title-input" name="title" required />
 
-        <label for="description">Description</label>
-        <input type="text" id="description-input" name="description" required />
+            <label for="description">Description</label>
+            <input
+              type="text"
+              id="description-input"
+              name="description"
+              required
+            />
 
-        <label for="dueDate">Due Date</label>
-        <input type="date" id="dueDate-input" name="dueDate" required />
+            <label for="dueDate">Due Date</label>
+            <input type="date" id="dueDate-input" name="dueDate" required />
 
-        <label for="priority">Priority</label>
-        <select id="priority-input" name="priority" required>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
+            <label for="priority">Priority</label>
+            <select id="priority-input" name="priority" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
 
-        <button type="submit">Create Project</button>
-      </form>
-    </div>
-    <div id="projects_container"></div>
+            <button type="submit">Create Project</button>
+          </form>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

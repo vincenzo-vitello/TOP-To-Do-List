@@ -11,7 +11,7 @@ import {
   removeTaskFromProject,
 } from "./storage";
 import { isValidDate } from "../global_functions/dateValidator";
-
+import iconSrc from "../assets/box.png";
 function handleProjectCreation(event) {
   event.preventDefault();
 
@@ -25,9 +25,9 @@ function handleProjectCreation(event) {
     return;
   }
   addProject(title, description, dueDate, priority);
-
   renderProjects();
   document.getElementById("project-form").reset();
+  showForm();
 }
 
 function setupNewProjectForm() {
@@ -177,6 +177,7 @@ function createProjectCard(project) {
 function renderProjects(filterFunction = null) {
   const container = document.getElementById("projects_container");
   const { projects } = loadData();
+  container.style.width = "100%";
   container.innerHTML = "";
 
   const filteredProjects = filterFunction
@@ -190,7 +191,15 @@ function renderProjects(filterFunction = null) {
   } else {
     const emptyContainer = document.createElement("p");
     emptyContainer.className = "empty-container-message";
+
     emptyContainer.textContent = "No projects to display.";
+
+    const icon = document.createElement("img");
+    icon.src = iconSrc;
+    icon.alt = "No projects icon";
+    icon.className = "empty-container-icon";
+
+    emptyContainer.prepend(icon);
     container.appendChild(emptyContainer);
   }
   console.log(projects);
@@ -215,4 +224,24 @@ function markProjectAsComplete(projectId) {
   updateProjectStatus(projectId, true);
   renderProjects();
 }
-export { renderProjects, setupNewProjectForm, filterProjects };
+function handleAddProjectBtn() {
+  const addBtn = document.getElementById("add-project");
+  addBtn.addEventListener("click", () => {
+    showForm();
+  });
+}
+function showForm() {
+  const newProjectForm = document.getElementById("new-project-form");
+  newProjectForm.classList.toggle("active");
+  showOverlay();
+}
+function showOverlay() {
+  const overlay = document.getElementById("overlay");
+  overlay.classList.toggle("active");
+}
+export {
+  renderProjects,
+  setupNewProjectForm,
+  filterProjects,
+  handleAddProjectBtn,
+};

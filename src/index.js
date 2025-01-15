@@ -3,6 +3,7 @@ import {
   setupNewProjectForm,
   filterProjects,
   handleAddProjectBtn,
+  cancelProjectCreation,
 } from "./modules/dom";
 import { initializeData } from "./modules/storage";
 import "./styles.css";
@@ -12,4 +13,5 @@ window.addEventListener("load", () => {
   setupNewProjectForm();
   filterProjects();
   handleAddProjectBtn();
+  cancelProjectCreation();
 });

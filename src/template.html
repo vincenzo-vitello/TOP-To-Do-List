@@ -27,13 +27,17 @@
           <li id="today">Today</li>
           <li id="this-week">This week</li>
           <li id="all-projects">All Projects</li>
+          <li id="completed">Completed</li>
         </ul>
         <button id="add-project">add project</button>
       </nav>
       <div class="projects-section">
         <div id="projects_container"></div>
         <div id="new-project-form">
-          <h2>Create New Project</h2>
+          <div class="form-header">
+            <h2>Create New Project</h2>
+            <button id="cancel-project-creation">Cancel</button>
+          </div>
           <form id="project-form">
             <label for="title">Title</label>
             <input type="text" id="title-input" name="title" required />

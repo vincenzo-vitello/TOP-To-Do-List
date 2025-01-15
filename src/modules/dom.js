@@ -239,9 +239,17 @@ function showOverlay() {
   const overlay = document.getElementById("overlay");
   overlay.classList.toggle("active");
 }
+function cancelProjectCreation() {
+  const cancelBtn = document.getElementById("cancel-project-creation");
+  cancelBtn.addEventListener("click", () => {
+    showForm();
+    document.getElementById("project-form").reset();
+  });
+}
 export {
   renderProjects,
   setupNewProjectForm,
   filterProjects,
   handleAddProjectBtn,
+  cancelProjectCreation,
 };

@@ -71,6 +71,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
 }
 #new-project-form {
   display: none;

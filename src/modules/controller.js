@@ -21,18 +21,20 @@ export function isDueThisWeek(project) {
 }
 export function isDueToday(project) {
   const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-
-  const todayFormatted = `${year}/${month}/${day}`;
   const projectDate = new Date(project.dueDate);
-  const projectYear = projectDate.getFullYear();
-  const projectMonth = String(projectDate.getMonth() + 1).padStart(2, "0");
-  const projectDay = String(projectDate.getDate()).padStart(2, "0");
 
-  const projectFormatted = `${projectYear}/${projectMonth}/${projectDay}`;
-  return projectFormatted === todayFormatted;
+  today.setHours(0, 0, 0, 0);
+  projectDate.setHours(0, 0, 0, 0);
+
+  return today.getTime() === projectDate.getTime();
+}
+export function getCompletedProjects() {
+  const data = loadData();
+  return data.projects.filter((project) => project.isDone === true);
+}
+export function getOpenProjects() {
+  const data = loadData();
+  return data.projects.filter((project) => !project.isDone);
 }
 export function updateProjectStatus(projectId, status) {
   const data = loadData();

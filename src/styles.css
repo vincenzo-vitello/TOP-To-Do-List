@@ -2,9 +2,15 @@
 :root {
   --important-text: "Poppins", sans-serif;
   --basic-text: "Figtree", sans-serif;
-  --dark-blue: #273043;
-  --grey: #9197ae;
-  --light-green: #eff6ee;
+  --base: #273043;
+  --accent: #9197ae;
+  --base-second: #eff6ee;
+  --overlay: rgba(73, 73, 73, 0.2);
+}
+[data-theme="dark"] {
+  --base: #eff6ee;
+  --accent: #9197ae;
+  --base-second: #273043;
 }
 * {
   margin: 0;
@@ -12,8 +18,13 @@
   box-sizing: border-box;
 }
 body {
-  background-color: var(--light-green);
+  background-color: var(--base-second);
   font-family: var(--basic-text);
+  color: var(--base);
+  transition: 0.2s ease-in-out;
+}
+button {
+  color: var(--base);
 }
 #overlay {
   display: none;
@@ -30,23 +41,23 @@ body {
 }
 header {
   height: 60px;
-  border-bottom: 2px solid var(--dark-blue);
+  border-bottom: 2px solid var(--base);
   padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--dark-blue);
+  color: var(--base);
 }
 header #logo {
   font-family: var(--important-text);
   font-size: 2rem;
   font-weight: 600;
 }
-header #theme-switcher i {
+header #theme-toggler i {
   font-size: 1.5rem;
   transition: 0.2s ease-in-out;
 }
-header #theme-switcher i:hover {
+header #theme-toggler i:hover {
   opacity: 0.7;
   cursor: pointer;
 }
@@ -57,21 +68,132 @@ main {
   width: 100%;
   position: relative;
 }
-#projects_container {
+#projects-container {
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
   gap: 20px;
   padding: 20px;
   overflow-x: hidden;
   overflow-y: scroll;
+  background-color: var(--overlay);
 }
-.project_card {
-  border: 2px solid var(--dark-blue);
-  padding: 20px;
+#projects-container.empty {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.project-card {
+  border: 2px solid var(--base);
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
   position: relative;
+  height: fit-content;
+  background-color: var(--base-second);
+}
+.project-card * {
+  padding: 0 20px;
+}
+.project-card .title,
+.project-card .description {
+  text-transform: capitalize;
+}
+.project-card .title {
+  border-bottom: 1px solid var(--base);
+  padding-left: 20px;
+  padding-bottom: 10px;
+  margin: 0;
+}
+.project-card .due-date {
+  font-weight: 700;
+}
+.project-card .due-date::before {
+  content: "Expires: ";
+  font-weight: normal;
+}
+.card-btns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.card-btns button {
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+  background-color: var(--base-second);
+  border: 2px solid var(--base);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+.card-btns .complete-btn:hover,
+.done-task:hover {
+  background-color: var(--accent);
+}
+.card-btns .delete-project-btn:hover,
+.delete-task:hover,
+.form-header button:hover {
+  border: 2px solid #ff3800;
+  color: #ff3800;
+  background-color: var(--overlay);
+}
+.add-task-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.add-task-wrapper input {
+  width: 100%;
+  height: 30px;
+  padding: 5px 10px;
+  border: 2px solid var(--base);
+}
+.add-task-wrapper input:focus {
+  outline: 2px solid var(--base);
+}
+.add-task-wrapper button {
+  border: 2px solid var(--base);
+  background-color: var(--base-second);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+.add-task-wrapper button:hover {
+  background-color: var(--accent);
+}
+.task-done {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+.empty-tasks-list {
+  font-size: 0.9rem;
+}
+.task-list {
+  padding-right: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.task-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0;
+}
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-list li button {
+  border: 2px solid var(--base);
+  cursor: pointer;
+  background-color: var(--base-second);
+  padding: 5px 10px;
 }
 #new-project-form {
   display: none;
@@ -82,26 +204,60 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--light-green);
-  padding: 20px;
-  border: 1px solid var(--dark-blue);
+  background-color: var(--base-second);
+  padding: 50px;
+  border: 4px solid var(--base);
   z-index: 2;
 }
 #project-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
-
+.form-header {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+  margin-bottom: 20px;
+}
+.form-header button {
+  padding: 5px 10px;
+  border: 2px solid var(--base);
+  background-color: var(--base-second);
+  cursor: pointer;
+}
+#project-form div {
+  display: flex;
+  justify-content: space-between;
+}
+#project-form input,
+#project-form select {
+  border: 2px solid var(--base);
+  padding: 5px 10px;
+}
+#project-form select {
+  background-color: white;
+}
+.create-project-btn {
+  border: 2px solid var(--base);
+  padding: 10px;
+  background-color: var(--base-second);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+.create-project-btn:hover {
+  background-color: var(--accent);
+}
 nav {
   width: 20%;
-  border-right: 2px solid var(--dark-blue);
+  border-right: 2px solid var(--base);
   height: calc(100vh - 60px);
   display: grid;
   grid-template-rows: repeat(12, 1fr);
   padding-bottom: 20px;
 }
 nav p {
-  border-bottom: 2px solid var(--dark-blue);
+  border-bottom: 2px solid var(--base);
   padding: 10px 20px;
   font-weight: 600;
   display: flex;
@@ -128,11 +284,12 @@ nav ul li::after {
   bottom: -5px;
   height: 2px;
   width: 0;
-  background-color: var(--dark-blue);
-  transition: width 0.3s ease;
+  background-color: var(--base);
+  transition: width 0.2s ease-in-out;
 }
 
-nav ul li:hover::after {
+nav ul li:hover::after,
+.filter-active::after {
   width: 60%;
 }
 nav #add-project {
@@ -141,8 +298,8 @@ nav #add-project {
   width: 80%;
   height: 80%;
   grid-row: 12;
-  border: 2px solid var(--dark-blue);
-  background-color: var(--light-green);
+  border: 2px solid var(--base);
+  background-color: var(--base-second);
   cursor: pointer;
   font-size: 1.1rem;
   text-transform: capitalize;
@@ -150,7 +307,7 @@ nav #add-project {
   transition: 0.2s ease-in-out;
 }
 nav #add-project:hover {
-  background-color: var(--grey);
+  background-color: var(--accent);
 }
 .empty-container-message {
   height: 100%;

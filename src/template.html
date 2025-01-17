@@ -12,11 +12,11 @@
       referrerpolicy="no-referrer"
     />
   </head>
-  <body>
+  <body data-theme="light">
     <div id="overlay"></div>
     <header>
       <div id="logo">Effictio.</div>
-      <div id="theme-switcher">
+      <div id="theme-toggler">
         <i class="fa-solid fa-circle-half-stroke"></i>
       </div>
     </header>
@@ -24,43 +24,54 @@
       <nav id="filters">
         <p for="filters"><span>Filters</span></p>
         <ul>
-          <li id="today">Today</li>
-          <li id="this-week">This week</li>
+          <li id="open-projects">Open</li>
           <li id="all-projects">All Projects</li>
           <li id="completed">Completed</li>
+          <li id="this-week">This week</li>
+          <li id="today">Today</li>
         </ul>
         <button id="add-project">add project</button>
       </nav>
       <div class="projects-section">
-        <div id="projects_container"></div>
+        <div id="projects-container"></div>
         <div id="new-project-form">
           <div class="form-header">
             <h2>Create New Project</h2>
             <button id="cancel-project-creation">Cancel</button>
           </div>
           <form id="project-form">
-            <label for="title">Title</label>
-            <input type="text" id="title-input" name="title" required />
+            <div>
+              <label for="title">Title</label>
+              <input type="text" id="title-input" name="title" required />
+            </div>
 
-            <label for="description">Description</label>
-            <input
-              type="text"
-              id="description-input"
-              name="description"
-              required
-            />
+            <div>
+              <label for="description">Description</label>
+              <input
+                type="text"
+                id="description-input"
+                name="description"
+                required
+              />
+            </div>
 
-            <label for="dueDate">Due Date</label>
-            <input type="date" id="dueDate-input" name="dueDate" required />
+            <div>
+              <label for="dueDate">Due Date</label>
+              <input type="date" id="dueDate-input" name="dueDate" required />
+            </div>
 
-            <label for="priority">Priority</label>
-            <select id="priority-input" name="priority" required>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
+            <div>
+              <label for="priority">Priority</label>
+              <select id="priority-input" name="priority" required>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
 
-            <button type="submit">Create Project</button>
+            <button type="submit" class="create-project-btn">
+              Create Project
+            </button>
           </form>
         </div>
       </div>

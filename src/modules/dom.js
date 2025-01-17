@@ -3,6 +3,8 @@ import {
   isDueThisWeek,
   isDueToday,
   updateProjectStatus,
+  getCompletedProjects,
+  getOpenProjects,
 } from "./controller";
 import {
   addProject,
@@ -35,111 +37,67 @@ function setupNewProjectForm() {
   form.addEventListener("submit", handleProjectCreation);
 }
 
-// function createProjectCard(project) {
-//   const projectCard = document.createElement("div");
-//   projectCard.classList.add("project_card");
-
-//   projectCard.innerHTML = `
-//         <h3 class="title">${project.title}</h3>
-//         <p class="description">${project.description}</p>
-//         <p class="due_date">${project.dueDate}</p>
-//         <p class="priority">Priority: ${project.priority}</p>
-//         <label for="tasks">Project Tasks: </label>
-//         <input type="text" class="task-input" required placeholder="Insert Task" />
-//         <button class="add-task">Add Task</button>
-//         <ul class="task_list"></ul>
-//         <button class="complete_btn">Mark As Complete</button>
-//         <button class="expand_btn">Expand</button>
-//         <button class="delete_project_btn">Delete Project</button>
-//       `;
-
-//   const updateTaskList = () => {
-//     const taskListElement = projectCard.querySelector(".task_list");
-//     taskListElement.innerHTML = project.tasks
-//       .map(
-//         (task) =>
-//           `<li class="task">
-//               ${task.title}
-//               <button class="delete-task" data-task-title="${task.title}">Delete Task</button>
-//             </li>`
-//       )
-//       .join("");
-
-//     const deleteTaskButtons = taskListElement.querySelectorAll(".delete-task");
-//     deleteTaskButtons.forEach((button) => {
-//       button.addEventListener("click", () => {
-//         const taskTitle = button.dataset.taskTitle;
-//         removeTaskFromProject(project.id, taskTitle);
-//         project.tasks = project.tasks.filter(
-//           (task) => task.title !== taskTitle
-//         );
-//         updateTaskList();
-//       });
-//     });
-//   };
-
-//   updateTaskList();
-
-//   const addTaskInput = projectCard.querySelector(".task-input");
-//   const addTaskBtn = projectCard.querySelector(".add-task");
-//   addTaskBtn.addEventListener("click", () => {
-//     const taskTitle = addTaskInput.value.trim();
-//     if (taskTitle) {
-//       project.tasks.push({ title: taskTitle });
-//       addTaskInput.value = "";
-//       addTaskToProject(project.id, taskTitle);
-//       updateTaskList();
-//     }
-//   });
-
-//   const deleteBtn = projectCard.querySelector(".delete_project_btn");
-//   deleteBtn.addEventListener("click", () => {
-//     removeProject(project.id);
-//     renderProjects();
-//   });
-
-//   return projectCard;
-// }
-
 function createProjectCardHTML(project) {
   const projectCard = document.createElement("div");
-  projectCard.classList.add("project_card");
-  if (project.isDone) {
-    projectCard.classList.add("complete");
-  }
+  projectCard.classList.add("project-card");
   projectCard.innerHTML = `
         <h3 class="title">${project.title}</h3>
         <p class="description">${project.description}</p>
-        <p class="due_date">${project.dueDate}</p>
+        <p class="due-date">${project.dueDate}</p>
         <p class="priority">Priority: ${project.priority}</p>
         <label for="tasks">Project Tasks: </label>
-        <input type="text" class="task-input" required placeholder="Insert Task" />
-        <button class="add-task">Add Task</button>
-        <ul class="task_list"></ul>
-        <button class="complete_btn">Mark As Complete</button>
-        <button class="delete_project_btn">Delete Project</button>
+        <ul class="task-list"></ul>
+        <div class="add-task-wrapper">
+          <input type="text" class="task-input" required placeholder="Insert Task" />
+          <button class="add-task">Add</button>
+        </div>
+        <div class="card-btns">
+          <button class="complete-btn">Mark As Complete</button>
+          <button class="delete-project-btn">Delete Project</button>
+        </div>
     `;
 
   return projectCard;
 }
 function updateTaskList(projectCard, project) {
-  const taskListElement = projectCard.querySelector(".task_list");
-  taskListElement.innerHTML = project.tasks
-    .map(
-      (task) =>
-        `<li class="task">
-            ${task.title} 
-            <button class="delete-task" data-task-title="${task.title}">Delete Task</button>
+  const taskListElement = projectCard.querySelector(".task-list");
+  if (project.tasks.length === 0) {
+    taskListElement.innerHTML = `<p class="empty-tasks-list">Seems like there's nothing to do...</p>`;
+  } else {
+    taskListElement.innerHTML = project.tasks
+      .map(
+        (task) =>
+          `<li class="task">
+            <p class="${task.done ? "task-done" : ""}">${task.title} </p>
+            <div class="task-actions">
+              <button class="done-task" data-task-title="${
+                task.title
+              }">Done</button>
+              <button class="delete-task" data-task-title="${
+                task.title
+              }">Delete</button>
+            </div>
           </li>`
-    )
-    .join("");
-
+      )
+      .join("");
+  }
   const deleteTaskButtons = taskListElement.querySelectorAll(".delete-task");
   deleteTaskButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const taskTitle = button.dataset.taskTitle;
       removeTaskFromProject(project.id, taskTitle);
       project.tasks = project.tasks.filter((task) => task.title !== taskTitle);
+      updateTaskList(projectCard, project);
+    });
+  });
+  const taskIsDoneBtns = taskListElement.querySelectorAll(".done-task");
+  taskIsDoneBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+      const taskTitle = button.dataset.taskTitle;
+      const task = project.tasks.find((t) => t.title === taskTitle);
+      if (task) {
+        task.done = !task.done;
+      }
       updateTaskList(projectCard, project);
     });
   });
@@ -157,12 +115,12 @@ function addProjectCardListeners(projectCard, project) {
     }
   });
 
-  const deleteBtn = projectCard.querySelector(".delete_project_btn");
+  const deleteBtn = projectCard.querySelector(".delete-project-btn");
   deleteBtn.addEventListener("click", () => {
     removeProject(project.id);
     renderProjects();
   });
-  const markAsCompleteBtn = projectCard.querySelector(".complete_btn");
+  const markAsCompleteBtn = projectCard.querySelector(".complete-btn");
   markAsCompleteBtn.addEventListener("click", () => {
     markProjectAsComplete(project.id);
   });
@@ -175,23 +133,22 @@ function createProjectCard(project) {
 }
 
 function renderProjects(filterFunction = null) {
-  const container = document.getElementById("projects_container");
+  const container = document.getElementById("projects-container");
   const { projects } = loadData();
   container.style.width = "100%";
   container.innerHTML = "";
 
-  const filteredProjects = filterFunction
-    ? projects.filter(filterFunction)
-    : projects;
+  const filteredProjects = filterFunction ? filterFunction(projects) : projects;
 
   if (filteredProjects.length > 0) {
+    container.classList.remove("empty");
     filteredProjects.forEach((project) => {
       container.appendChild(createProjectCard(project));
     });
   } else {
     const emptyContainer = document.createElement("p");
     emptyContainer.className = "empty-container-message";
-
+    container.classList.add("empty");
     emptyContainer.textContent = "No projects to display.";
 
     const icon = document.createElement("img");
@@ -202,23 +159,53 @@ function renderProjects(filterFunction = null) {
     emptyContainer.prepend(icon);
     container.appendChild(emptyContainer);
   }
-  console.log(projects);
 }
 function filterProjects() {
   const filters = document.getElementById("filters");
   const todayFilter = filters.querySelector("#today");
   const thisWeekFilter = filters.querySelector("#this-week");
   const allProjectsFilter = filters.querySelector("#all-projects");
+  const completeProjectsFilter = filters.querySelector("#completed");
+  const openProjectsFilter = filters.querySelector("#open-projects");
+  const filtersArr = [
+    todayFilter,
+    thisWeekFilter,
+    allProjectsFilter,
+    completeProjectsFilter,
+    openProjectsFilter,
+  ];
+
+  openProjectsFilter.addEventListener("click", () => {
+    renderProjects(getOpenProjects);
+    setActiveFilter(openProjectsFilter, filtersArr);
+  });
+
+  completeProjectsFilter.addEventListener("click", () => {
+    renderProjects(getCompletedProjects);
+    setActiveFilter(completeProjectsFilter, filtersArr);
+  });
 
   todayFilter.addEventListener("click", () => {
-    renderProjects(isDueToday);
+    renderProjects((projects) => projects.filter(isDueToday));
+    setActiveFilter(todayFilter, filtersArr);
   });
+
   allProjectsFilter.addEventListener("click", () => {
     renderProjects();
+    setActiveFilter(allProjectsFilter, filtersArr);
   });
+
   thisWeekFilter.addEventListener("click", () => {
-    renderProjects(isDueThisWeek);
+    renderProjects((projects) => projects.filter(isDueThisWeek));
+    setActiveFilter(thisWeekFilter, filtersArr);
   });
+}
+
+function setActiveFilter(activeFilter, filtersArr) {
+  filtersArr.forEach((filter) => {
+    filter.classList.remove("filter-active");
+  });
+  activeFilter.classList.add("filter-active");
 }
 function markProjectAsComplete(projectId) {
   updateProjectStatus(projectId, true);
@@ -246,10 +233,26 @@ function cancelProjectCreation() {
     document.getElementById("project-form").reset();
   });
 }
+function setColorScheme() {
+  const body = document.querySelector("body");
+  let currentTheme = body.getAttribute("data-theme");
+  const toggler = document.getElementById("theme-toggler");
+
+  toggler.addEventListener("click", () => {
+    if (currentTheme === "dark") {
+      body.setAttribute("data-theme", "light");
+      currentTheme = "light";
+    } else {
+      body.setAttribute("data-theme", "dark");
+      currentTheme = "dark";
+    }
+  });
+}
 export {
   renderProjects,
   setupNewProjectForm,
   filterProjects,
   handleAddProjectBtn,
   cancelProjectCreation,
+  setColorScheme,
 };
